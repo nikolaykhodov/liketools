@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load main_extras %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/manager_accounts.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info">
+        <p>Для редактирования аккаунта сделайте двойной щелчок по строке в таблице.</p>
+
+        <p>После обновления токена вы можете просто скопировать адрес с токеном.</p>
+    </div>
+
+    <div id="accounts" class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input type="checkbox" class="all_cb" value="" id="select_accounts" onclick="AccountManager.toggleChecked();"></th>
+                    <th>Логин</th>
+                    <th>Токен</th>
+                </tr>
+            </thead>
+            {% for account in accounts %}
+            <tr account_id="{{ account.pk }}">
+                <td><input account_id="{{ account.pk }}" type="checkbox" value="" class="account_select"></td>
+                <td>{{ account.name }}</td>
+                <td>{{ account.access_token|mask_by_asterisks:30 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="javascript:;" onclick="AccountManager.showAddDialog();"><i class="icon-plus"></i></a>
+        <a class="btn" href="javascript:;" onclick="AccountManager.showRemoveDialog();"><i class="icon-remove"></i></a>
+    </div>
+
+    <!-- UPDATE ACCOUNT -->
+    <div id="updateAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="updateAccountLabel">Редактирование аккаунта</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div id="updateAccountError" class="alert alert-error">
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="updateAccountLogin">Логин</label>
+                    <div class="controls">
+                        <input type="text" value="" id="updateAccountLogin" placeholder="Логин">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="updateAccountToken">Токен</label>
+                    <div class="controls">
+                        <input type="text" id="updateAccountToken" value="" placeholder="При пустом значении токен не изменится">
+                        <a class="btn" href="{{ refresh_token_url }}" target="_blank">Обновить</a>
+                        <span class="badge"><abbr title="Обновить Токен" class="initialism">?</abbr></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="AccountManager.update($('#updateAccountLogin').val(), $('#updateAccountToken').val())">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ADD ACCOUNT -->
+    <div id="addAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="addAccountLabel">Добавление аккаунта</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div id="addAccountError" class="alert alert-error">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="addAccountName">Логин</label>
+                    <div class="controls">
+                        <input type="text" value="" id="addAccountName" placeholder="Логин">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="addAccountAccessToken">Токен</label>
+                    <div class="controls">
+                        <input type="text" id="addAccountAccessToken" value="" placeholder="Токен">
+                        <a class="btn" href="{{ refresh_token_url }}" target="_blank">Обновить</a>
+                        <span class="badge"><abbr title="Обновить Токен" class="initialism">?</abbr></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="AccountManager.add($('#addAccountName').val(), $('#addAccountAccessToken').val());">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- REMOVE CONFIRMATION DIALOG -->
+    <div id="removeAccountsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeAccountsLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="removeAccountsLabel">Удаление</h3>
+        </div>
+        <div class="modal-body">
+            <div id="removeAccountsError" class="alert alert-error">
+
+            </div>
+            <label class="control-label">Вы действительно хотите удалить выбранный аккаунт(-ы) (количество: <span id="removeAccountCounter" class="label"></span>) ?</label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="AccountManager.remove();">Удалить</button>
+        </div>
+    </div>
+
+    
+{% endblock %}

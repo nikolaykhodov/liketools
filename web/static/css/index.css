@@ -1,0 +1,45 @@
+.info_grid {
+    width: 100%;
+}
+
+.info_grid thead td {
+    border-bottom: 1px solid black;
+}
+
+.info_grid tbody tr.info:hover {
+    cursor: pointer;
+    background-color: #ccc;
+}
+.info_grid tbody tr.info td {
+    padding: 3px 0px 3px 0px;
+    border-bottom: 1px solid black;
+}
+.info_grid tbody tr.data {
+    display: none;
+    background-color: #c0c0c0;
+}
+
+.add_post ul {
+    list-style-type: none;
+}
+
+.add_post ul li {
+    margin: 5px;
+    display: block;
+}
+
+.add_post label {
+    font-weight: bold;
+}
+.add_post input, .add_post textarea {
+    margin-top: 5px;
+    display: block;
+    border: #ccc solid 1px;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.add_post ul li.error {
+    color: red;
+    font-size: 0.8em;
+}

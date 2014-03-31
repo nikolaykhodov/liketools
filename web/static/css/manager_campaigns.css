@@ -1,0 +1,47 @@
+.td_cb {
+    width: 14px;
+}
+input[disabled] {
+    cursor: pointer;
+}
+
+input[readonly] {
+    cursor: text;
+}
+
+td {
+    position:relative;
+}
+.campaign_name[disabled]{
+    width: 444px !important;
+    border: 1px solid #CCC !important;
+    border: transparent !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+    padding: 2px !important;
+    margin: 0 !important;
+}
+.campaign_name  {
+    border: 1px solid #CCC !important;
+    width: 444px !important;
+    background-color: white !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+    padding: 2px !important;
+    margin: 0 !important;
+}
+
+
+tbody tr:hover input {
+    background-color: #f5f5f5 !important;
+}

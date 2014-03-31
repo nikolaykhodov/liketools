@@ -1,0 +1,7 @@
+* DBPersistStorage::get - obj data
+DBPersistStorage::all - obj
+* SimpleListStorage::get - obj data
+SimpleListStorage::get_events - obj
+* RBTreeStorage::get - obj data
+RBTreeStorage::get_events - obj
+

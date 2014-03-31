@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a href="https://oauth.vk.com/authorize?client_id={{ app_id }}&scope=groups,photos,audio,video&redirect_uri={{ auth_host }}{% url social_auth_vk %}&response_type=code" class="btn btn-primary">Войти через ВКонтакте</a>
+{% endblock %}

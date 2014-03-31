@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load main_extras %}
+
+{% block css_head %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/index.css?1">
+{% endblock %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/index.js"></script>
+{% endblock %}
+
+
+{% block content %}
+    {% if events %}
+    <table class="info_grid" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <td>#</td><td>Время срабатывания</td><td>Обрабатывается?</td><td>Обработано?</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr class="info">
+                <td><a name="event_{{ event.id }}" href="#event_{{ event.id }}">{{ event.id }}</a></td>
+                <td>{{ event.event_time|fromunix|date:"d.m.Y H:i:s" }}</td><td>{% if not event.processing %}Нет{% else %}{{ event.processing_timestamp|fromunix|date:"d.m.Y H:i:s" }}{% endif %} </td>
+                <td>{% if not event.processed %}Нет{% else %}{{ event.processed_timestamp|fromunix|date:"d.m.Y H:i:s" }}{% endif %} </td>
+            </tr>
+            <tr class="data">
+                <td colspan="4">
+                    <pre>
+{{ event.data|pretty_json|mask_by_asterisks:30 }}
+                    </pre>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if posts %}
+    <table class="info_grid" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <td>#</td><td>Время размещения</td><td>Время удаления</td><td>Чья стена</td><td>От имени группы?</td><td>Размещен?</td><td>Событие</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr class="info">
+                <td><a name="post_{{ post.id }}" href="#post_{{ post.id }}">{{ post.id }}</a></td>
+                <td>{{ post.when_to_post|date:"d.m.Y H:i:s" }}</td>
+                <td>{{ post.when_to_delete|date:"d.m.Y H:i:s" }}</td>
+                <td>{% if post.owner_id != 0 %}<a href="http://vk.com/wall{{ post.owner_id }}" target="_blank">{% if post.owner_id > 0 %}id{% else %}club{% endif %}{{ post.owner_id }}{% else %}Владелец токена{% endif %}</a></td>
+                <td>{% if post.from_group %}Да{% else %}Нет{% endif %}</td>
+                <td>{% if post.link == '' %}Нет{% else %}<a href="http://vk.com/wall{{ post.link }}">http://vk.com/wall{{ post.link }}</a> в {{ post.link_timestamp|date:"d.m.Y H:i:s" }}{% endif %}</td>
+                <td><a href="?tab=events#event_{{post.event_id}}">{{ post.event_id }}</a>&nbsp;</td>
+            </tr>
+            <tr class="data">
+                <td colspan="7">
+                    <span class="label">Текст</span>
+                    <pre>{{ post.text }}</pre>
+                    <br/>
+
+                    <span class="label">Приложения</span> 
+                    </br>
+                    {{ post.attachments }}
+
+                    </br>
+                    <span class="label">Лог</span> 
+                    </br>
+                    {{ post.log }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

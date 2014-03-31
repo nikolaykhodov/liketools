@@ -1,0 +1,77 @@
+{% load tz %}
+{% load main_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+        <title>LiKeToOls</title>
+        <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="{{ STATIC_URL }}css/base.css" rel="stylesheet" media="screen">
+        {% block css_head %} {% endblock %}
+
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js?1.8.0"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/base.js"></script>
+        {% block js_head %} {% endblock %}
+    </head>
+
+    <body>
+        <div id="current_time" start="{{ current_time }}">
+            <div class="btn-group">
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span id="current_time_value">Текущее время сервера</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#ChangeTimezoneModal" role="button" data-toggle="modal">Изменить часовой пояс</a>
+                </ul>
+            </div>
+        </div>
+ 
+        <!-- Modal -->
+        <div id="ChangeTimezoneModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ChangeTimezoneLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="ChangeTimezoneLabel">Изменение часового пояса</h3>
+          </div>
+          <div class="modal-body">
+            <form action="{% url set_timezone %}" method="POST" name="set_timezone">
+                {% csrf_token %}
+                <select name="timezone" onchange="document.forms.set_timezone.submit();">
+                    {% for tz in timezones %}
+                    <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected="selected"{% endif %}>{{ tz }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          </div>
+        </div>
+        
+        <div id="navi">
+            <ul class="nav nav-tabs">
+                <li><a href="/?tab=events">События в очереди</a></li>
+                <li><a href="/?tab=posts">Посты</a></li>
+                <li><a href="{% url manager_options %}">Мои настройки</a></li>
+                <li><a href="{% url manager_accounts_list %}">Мои аккаунты</a></li>
+                <li><a href="{% url manager_groups_list %}">Мои группы</a></li>
+                <li><a href="{% url manager_campaigns_list %}">Мои кампании</a></li>
+                <li><a href="{% url social_auth_logout %}">Выйти</a></li>
+                </li>
+            </ul>
+        </div>
+
+        <div style="clear: both;"></div>
+
+        <div id="base_content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <script type="text/javascript">
+            {% autoescape off %}
+            var manager_options = JSON.parse('{% manager_options user %}');
+            {% endautoescape %}
+        </script>
+    </body>
+</html>

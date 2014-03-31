@@ -1,0 +1,23 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+}
+
+#current_time {
+    float: right;
+    font-weight: bold;
+}
+
+.left {
+    float: left;
+}
+
+#base_content {
+    margin: 5px 10px;
+    height: 100%;
+}

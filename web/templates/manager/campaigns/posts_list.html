@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load main_extras %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/manager_posts.js"></script>
+{% endblock %}
+
+{% block css_head %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/manager_posts.css">
+{% endblock %}
+
+{% block content %}
+
+    <h3>{{ campaign.name }}</h3>
+
+    <div class="alert alert-info">
+        <p>Для редактирования поста сделайте двойной щелчок по строке в таблице.</p>
+    </div>
+
+    <div id="posts" class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input type="checkbox" class="all_cb" value="" id="select_posts" onclick="PostManager.toggleChecked();"></th>
+                    <th>Пост</th>
+                    <th>Размещение</th>
+                    <th>Удаление</th>
+                </tr>
+            </thead>
+
+            {% for post in posts %}
+            <tr post_id="{{ post.pk }}" posting_status="{{ post.status }}">
+                <td><input post_id="{{ post.pk }}" type="checkbox" value="" class="post_select"></td>
+                <td>
+                    {% if post.links.posted %}
+                        <a href="javascript:;" onclick="$('#result_{{ post.pk }}').toggle();">Показать/скрыть</a>
+                        <ul id="result_{{ post.pk }}" class="result">
+                        {% for vk_post in post.get_vk_posts %}
+                        <li>
+                            {% if vk_post.post_id %} 
+                                <img src="{{STATIC_URL}}img/success.ico" width="16" height="16" title="{{ vk_post.timestamp|fromunix|date:"d.m.Y H:i:s"}}"> <a href="http://vk.com/wall{{ vk_post.owner_id }}_{{ vk_post.post_id}}" target="_blank">http://vk.com/wall{{ vk_post.owner_id }}</a></li>
+                            {% else %}
+                                <img src="{{STATIC_URL}}img/error.ico" width="16" height="16" title="{{ vk_post.log }}">http://vk.com/wall{{ vk_post.owner_id }}
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                     {{ post.text }}
+                    <br/>
+                    {{ post.attachments }}
+                </td>
+                <td>
+                    {{ post.when_to_post|date:"d.m.Y H:i:s" }}
+                    {% if post.links.posted %}
+                        {% if post.links.errors %}
+                        <img src="{{ STATIC_URL}}img/alert.ico" width="16" height="16" title="{{ post.links.posted|fromunix|date:"d.m.Y H:i:s" }}">
+                        {% else %}
+                        <img src="{{ STATIC_URL}}img/success.ico" width="16" height="16" title="{{ post.links.posted|fromunix|date:"d.m.Y H:i:s" }}">
+                        {% endif %}
+                    {% else %}
+                        <img src="{{ STATIC_URL}}img/waiting.ico" width="16" height="16">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if post.when_to_delete %}
+                        {{ post.when_to_delete|date:"d.m.Y H:i:s" }}
+                        {% if post.links.deleted %}
+                            <img src="{{ STATIC_URL}}img/success.ico" width="16" height="16" title="{{ post.links.deleted|fromunix|date:"d.m.Y H:i:s" }}">
+                        {% else %}
+                            <img src="{{ STATIC_URL}}img/waiting.ico" width="16" height="16">
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="javascript:;" onclick="PostManager.showAddDialog();"><i class="icon-plus"></i></a>
+        <a class="btn" href="javascript:;" onclick="PostManager.showRemoveDialog();"><i class="icon-remove"></i></a>
+    </div>
+
+    <!-- UPDATE POST DIALOG -->
+    <div id="updatePostModal" class="post-dialog modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="updatePostLabel">Редактирование поста</h3>
+        </div>
+        <div class="modal-body">
+            <iframe src="" id="updatePostIframe" class="post-iframe"></iframe>
+        </div>
+         <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ADD POST DIALOG -->
+    <div id="addPostModal" class="post-dialog modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="addPostLabel">Добавление поста</h3>
+        </div>
+        <div class="modal-body">
+            <iframe src="" id="addPostIframe" class="post-iframe"></iframe>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+
+    <!-- REMOVE CONFIRMATION DIALOG -->
+    <div id="removePostsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removePostsLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="removePostsLabel">Удаление</h3>
+        </div>
+        <div class="modal-body">
+            <div id="removePostsError" class="alert alert-error">
+
+            </div>
+
+            <div class="alert alert-error">
+                <b>Внимание!</b> Данное действие необратимо!
+            </div>
+
+            <label class="control-label">Вы действительно хотите удалить выбранный посты(-ы)?</label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="PostManager.remove();">Удалить</button>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var campaign_id = parseInt('{{ campaign.pk }}');
+    </script>
+{% endblock %}

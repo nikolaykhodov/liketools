@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/manager_campaigns.js"></script>
+{% endblock %}
+
+{% block css_head %}
+    <link href="{{ STATIC_URL }}css/manager_campaigns.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-error">
+        Данная страница находится в разработке и любые действия на ней не влияют на работу Liketools.
+    </div>
+
+    <div id="campaigns" class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input type="checkbox" class="all_cb" value=""></th>
+                    <th>Кампании</th>
+                    <th>Постов к размещению</th>
+                    <th>Размещено</th>
+                </tr>
+            </thead>
+            <tr>
+                <td><input type="checkbox" value=""></td>
+                <td class="dis_input"><input id="qwe" type="text" class="campaign_name" value="Тапочки дедушки 2012" placeholder="Название кампании" disabled></td>
+                <td>10</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" value=""></td>
+                <td class="dis_input"><input type="text" class="campaign_name" value="Какая жесть!!! ШОК СМОТРЕТЬ ВСЕМ!!!!!!!!!!!!!!!!!!!!!!!!!!!!" placeholder="Название кампании" disabled></td>
+                <td>10</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" value=""></td>
+                <td class="dis_input"><input type="text" class="campaign_name" value="Тут есть база всех граждан России" placeholder="Название кампании" disabled></td>
+                <td>10</td>
+                <td>0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="#"><i class="icon-plus"></i></a>
+        <a class="btn" title="Кампания удаляется со всеми постами в ней." href="#"><i class="icon-remove"></i></a>
+    </div>
+    
+    <div class="span12"><hr/></div>
+    <h4 class="span7">Какая жесть!!! ШОК СМОТРЕТЬ ВСЕМ!</h4>
+    <form class="form-search" style="float: left;">
+        <div class="input-append">
+            <input type="text" class="span2 search-query">
+            <button type="submit" class="btn">Search</button>
+        </div>
+    </form>
+    <div class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input type="checkbox" class="all_cb" value=""></th>
+                    <th>Группа</th>
+                    <th>Текст</th>
+                    <th>Размещен</th>
+                    <th>Ошибки</th>
+                    <th>Ссылка</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" value=""></td>
+                    <td>Группа 1</td>
+                    <td>Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля</td>
+                    <td><input type="checkbox" value=""></td>
+                    <td><input type="checkbox" value=""></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value=""></td>
+                    <td>Группа 2</td>
+                    <td>Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля</td>
+                    <td>5:26 p.m.</td>
+                    <td><input type="checkbox" value=""></td>
+                    <td><a href="http://ya.ru">ya.ru</a></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value=""></td>
+                    <td>Группа 3</td>
+                    <td>Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля Ля-ля-ля</td>
+                    <td><input type="checkbox" value=""></td>
+                    <td><input type="checkbox" value=""></td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="#"><i class="icon-plus"></i></a>
+        <a class="btn" href="#"><i class="icon-remove"></i></a>
+        <a class="btn" title="Рефрешнуть пость: удалить и заного создать" href="#"><i class="icon-refresh"></i></a>
+    </div>
+{% endblock %}

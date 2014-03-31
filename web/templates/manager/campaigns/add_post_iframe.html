@@ -1,0 +1,446 @@
+﻿{% load main_extras %}
+{% load manager_extras %}
+<!DOCTYPE html>
+    <head>
+        <meta http-equiv="Conten-Type" content="text/html; charset=utf-8" />
+        <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/add_post.css?1">
+        <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/flick/jquery-ui.min.css?1.9.1">
+        <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-timepicker-addon.css?16102012">
+
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js?1.8.0"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js?1.2"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui.js?1.9.0"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js?16102012"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/api.js?1"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/add_post.js?1"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/manager_options.js"></script>
+    </head>
+    <body>
+        <div class="vk">
+            <div id="container">
+                <div id="wall_header">
+                    <!--    <h1 id="wall_title">{{ campaign.name }}</h1> -->
+                </div>
+                <div id="post">
+                    <div id="post_editor">
+                        <div class="page_module_header" >
+                            <b >Текст поста</b>
+                        </div>
+                        <div id="submit_post_box" class="clear_fix">
+                            <textarea id="post_field"></textarea>
+                            <div id="submit_post">
+                                <div id="media_preview" class="clear_fix">
+                                
+                                    <div id="page_pics_preview" class="clear_fix">
+                                        <!--<div class="page_preview_photo_wrap">
+                                            <div class="page_preview_photo">
+                                                <img src="{{ STATIC_URL }}img/stub_thumbnail.jpg">
+                                            </div>
+                                            <div class="page_media_x_wrap" tootltip="Не прикреплять">
+                                                <div class="page_media_x"></div>									
+                                            </div>
+                                        </div>-->
+                                        
+                                        <!--
+                                        <div class="page_preview_video_wrap">
+                                            <div class="page_preview_video">
+                                                <img class="page_preview_video" src="{{ STATIC_URL }}img/stub_video.jpg">
+                                            </div>
+                                            <div class="page_media_x_wrap" tootltip="Не прикреплять">
+                                                <div class="page_media_x"></div>
+                                            </div>
+                                        </div>
+                                        -->
+                                    </div>
+                                    
+                                    <div id="page_docs_preview" class="clear_fix">
+                                        <!--
+                                        <div class="page_preview_audio_wrap clear_fix">
+                                            <div class="audio">
+                                                <div class="media_audio_icon"></div>
+                                                <span><b>Ibiza Club &amp; Real To Real..</b> – 123 Push Ups (Original Mix)</span>
+                                            </div>
+                                            <div class="page_docs_x_wrap" tootltip="Не прикреплять">
+                                                <div class="page_docs_x"></div>
+                                            </div>
+                                        </div>
+                                        -->
+                                    </div>
+                                    <div id="page_add_media" class="clear_fix">
+                                        <span>Прикрепить</span>
+                                        <div id="add_media_menu">
+                                            <div class="add_media_rows">
+                                                <div class="add_media_head">Прикрепить</div>
+                                                <a id="add_media_type_photo" class="add_media_item" onclick="PostEditor.addPhoto();">фотографию</a>
+                                                <a id="add_media_type_video" class="add_media_item" onclick="PostEditor.addVideo();">видеозапись</a>
+                                                <a id="add_media_type_audio" class="add_media_item" onclick="PostEditor.addAudio();">аудиозапись</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="post_settings_time" class="clear_fix">
+                        <div class="post_settings_title">Размещение</div>
+                        <div class="post_settings_container">
+                            <div class="select_wrap">
+                                <div class="select_simulator">             
+                                    <div class="select_selected">                    
+                                        <div class="selected-text">По расписанию</div><div class="select_arraw"></div>
+                                    </div> 
+                                    <div class="select_options">
+                                        <!--
+                                        <div class="select_option" value="immediately">Немедлено</div>
+                                        <div class="select_option" value="interval">Через промежуток времени</div>
+                                        -->
+                                        <div class="select_option" value="schedule">По расписанию</div>
+                                    </div>
+                                </div>
+                                <select id="when_to_post_mode" onchange="PostEditor.changeWhenToPost();">
+                                    <option value="immediately">Немедлено</option>
+                                    <option value="interval">Через промежуток времени</option>
+                                    <option value="schedule">По расписанию</option>
+                                </select>
+                            </div>
+                            
+                            <div id="post_immediately" class="post_mode when_to_post" style="display: none; ">
+                            </div>
+                            
+                            <div id="post_interval" class="post_mode when_to_post" style="display: none; ">
+                                <span>Разместить через</span>
+                                <input type="text" id="post_interval_value" class="interval">
+
+                                <div class="select_wrap">
+                                    <div class="select_simulator">             
+                                        <div class="select_selected select_interval">                    
+                                            <div class="selected-text">минут</div><div class="select_arraw"></div>
+                                        </div> 
+                                        <div class="select_options">
+                                            <div class="select_option" value="min">минут</div>
+                                            <div class="select_option" value="hour">часов</div>
+                                            <div class="select_option" value="day">дней</div>
+                                        </div>
+                                    </div>
+                                    <select id="post_interval_step">
+                                        <option value="min">минут</option>
+                                        <option value="hour">часов</option>
+                                        <option value="day">дней</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div id="post_schedule" class="post_mode when_to_post" style="display: block; ">
+                                <span>Разместить в</span>
+                                <input type="text" id="post_schedule_timestamp" class="timestamp">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="post_settings_delete" class="clear_fix">
+                        <div class="post_settings_title">Удаление</div>
+
+                        <div class="post_settings_container">
+                            <div class="select_wrap">
+                                <div class="select_simulator">             
+                                    <div class="select_selected">                    
+                                        <div class="selected-text">Не удалять</div><div class="select_arraw"></div>
+                                    </div> 
+                                    <div class="select_options">
+                                        <div class="select_option" value="no">Не удалять</div>
+                                        <!--
+                                        <div class="select_option" value="after_posting">После публикации</div>
+                                        -->
+                                        <div class="select_option" value="schedule">По расписанию</div>
+                                    </div>
+                                </div>
+                                <select id="when_to_delete_mode" onchange="PostEditor.changeWhenToDelete();">
+                                    <option value="no">Не удалять</option>
+                                    <option value="after_posting">После публикации</option>
+                                    <option value="schedule">По расписанию</option>
+                                </select>
+                            </div>	
+
+                            <div id="delete_no" class="post_mode when_to_delete" style="display: block; "> </div>
+
+                            <div id="delete_after_posting" class="post_mode when_to_delete" style="display: none; ">
+                                <span>Удалить через</span>
+                                <input type="text" id="delete_after_posting_value" class="interval">
+
+                                <div class="select_wrap">
+                                    <div class="select_simulator">             
+                                        <div class="select_selected select_interval">                    
+                                            <div class="selected-text">минут</div><div class="select_arraw"></div>
+                                        </div> 
+                                        <div class="select_options">
+                                            <div class="select_option" value="min">минут</div>
+                                            <div class="select_option" value="hour">часов</div>
+                                            <div class="select_option" value="day">дней</div>
+                                        </div>
+                                    </div>
+                                    <select id="delete_after_posting_step">
+                                        <option value="min">минут</option>
+                                        <option value="hour">часов</option>
+                                        <option value="day">дней</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="delete_schedule" class="post_mode when_to_delete" style="display: none; ">
+                                <span>Удалить в</span>
+                                <input type="text" id="delete_schedule_timestamp" class="timestamp">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="post_settings_account" class="clear_fix">
+                        <div class="post_settings_title">Аккаунт</div>
+
+                        <div id="post_settings_account_container" class="clear_fix">
+                            <div class="select_wrap">
+                                <div class="select_simulator">             
+                                    <div class="select_selected select_interval">                    
+                                        <div class="selected-text">{{ accounts.0.name }}</div><div class="select_arraw"></div>
+                                    </div> 
+                                    <div class="select_options">
+                                        {% for account in accounts %}
+                                        <div class="select_option" value="{{ account.pk }}">{{ account.name }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <select id="posting_account" onchange="PostEditor.changePostingAccount();">
+                                    {% for account in accounts %}
+                                    <option value="{{ account.pk }}">{{ account.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="post_settings_mode" class="clear_fix">
+                        <div class="post_settings_title">Режим размещения</div>
+
+                        <div id="post_settings_mode_container" class="clear_fix">
+                            <div class="select_wrap">
+                                <div class="select_simulator">             
+                                    <div class="select_selected select_interval">                    
+                                        <div class="selected-text">По одному</div><div class="select_arraw"></div>
+                                    </div> 
+                                    <div class="select_options">
+                                        <div class="select_option" value="one_at_a_time">По одному</div>
+                                        <div class="select_option" value="chain">По цепочке</div>
+                                    </div>
+                                </div>
+                                <select id="posting_mode" onchange="PostEditor.changePostingMode();">
+                                    <option value="one_at_a_time">По одному</option>
+                                    <option value="chain">По цепочке</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                         
+                    <div id="post_settings_group" class="clear_fix">
+                        <div class="post_settings_title">Группы</div>
+                        <div id="group_box" class="clear_fix">
+                            <!-- 
+                            <div class="group_link">
+                                <span>Сообщество родителей Мама.Ру</span>
+                                <div class="page_docs_x_wrap"></div>
+                            </div>
+                            -->
+                            <div id="add_group" class="group_link" style="cursor: pointer;" onclick="PostEditor.addGroup();">
+                                <span>Нажмите для выбора группы...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="button_wrap" class="clear_fix">
+                        <div class="button_blue">
+                            <button id="save_post" onclick="PostEditor.submit();">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dialogs">
+
+                <div id="submit_post_dialog" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="photo_preview">Закрыть</a>
+                        <div class="choose_header">Добавление в очередь</div>
+                        
+                        <div id="submit_post_wrap" class="choose_rows">
+                        </div>
+
+                        <div id="submit_post_button_wrap" class="clear_fix">
+                            <div class="button_blue">
+                                <button id="submit_post_close" onclick="PostEditor.hide_dialog('submit_post_dialog');">Закрыть</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="photo_preview" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="photo_preview">Закрыть</a>
+                        <div class="choose_header">Просмотр фотографии</div>
+                        
+                        <div id="photo_preview_wrap" class="choose_rows">
+                            <img src="https://pp.userapi.com/c304415/v304415930/7945/MXLUrqpK--M.jpg"/>
+                            <br id="photos_choose_clear" class="clear">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="video_preview" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="video_preview">Закрыть</a>
+                        <div class="choose_header">Просмотр видео</div>
+                        
+                        <div id="video_preview_wrap" class="choose_rows">
+                            <br id="videos_choose_clear" class="clear">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="photos_chooser" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="photos_chooser">Закрыть</a>
+                        <div class="choose_header">Прикрепление фотографии</div>
+                        
+                        <div id="photos_choose_rows" class="choose_rows">
+                            <br id="photos_choose_clear" class="clear">
+                        </div>
+                        <a id="photos_choose_more" class="choose_more">Показать ещё фотографии</a>
+                    </div>
+                </div>
+
+                <div id="groups_chooser" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="groups_chooser">Закрыть</a>
+                        <div class="choose_header">Выбор группы</div>
+                        
+                        <div id="groups_choose_rows" class="choose_rows">
+                            <!--
+                            <div class="groups_choose_row">
+                                <img src="{{ STATIC_URL }}img/stub_group1.jpg" width="100" height="100">
+                                <span>Группа1</span>
+                            </div>
+                            -->
+                            <br class="clear">
+                        </div>
+
+                        <a class="choose_more">Показать еще группы</a>
+                        <div id="button_wrap" class="clear_fix">
+                            <div class="button_blue">
+                                <button onclick="PostEditor._group_onChoose();">Выбрать</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="video_chooser" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="video_chooser">Закрыть</a>
+                        <div class="choose_header">Прикрепление видео</div>
+                        
+                        <div class="search_wrap">
+                            <input type="text" id="video_search" class="search_field" onkeypress="if(event.keyCode == 13) PostEditor._video_search();"/>
+                            <div class="button_blue" style="float: none;">
+                                <button onclick="PostEditor._video_search();">Поиск</button>
+                            </div>
+
+                            <a href="#" id="return_to_my_video" class="return" onclick="PostEditor._video_preload(0, '');">Вернуться к моим видеозаписям</a>
+                        </div>
+
+
+                        <div id="video_choose_rows" class="choose_rows">
+
+                            <!--
+                            <div class="video_choose_row">
+                                <div class="video_thumbnail">
+                                    <img src="{{ STATIC_URL }}img/stub_video.jpg" width="130" height="98">
+                                    <span>42:27</span>
+                                </div>
+                                <span>Неизвестные лица/ Persons Unknown s01e01</span>
+                            </div>
+                            -->
+
+                            <br class="clear">
+                        </div>
+
+                        <a id="video_choose_more" class="choose_more">Показать еще видео</a>
+                    </div>
+                </div>
+
+                <div id="audio_chooser" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="audio_chooser">Закрыть</a>
+                        <div class="choose_header">Прикрепление аудио</div>
+
+
+                        <div class="search_wrap">
+                            <input type="text" id="audio_search" class="search_field" onkeypress="if(event.keyCode == 13) PostEditor._audio_search();"/>
+                            <div class="button_blue" style="float: none;">
+                                <button onclick="PostEditor._audio_search();">Поиск</button>
+                            </div>
+
+                            <a href="#" id="return_to_my_audio" class="return" onclick="PostEditor._audio_preload(0, '');">Вернуться к моим аудиозаписям</a>
+                        </div>
+
+                        <div id="audio_choose_rows">
+                            <!--
+                            <div class="audio_choose_row">
+                                <div class="song">
+                                    <b class="performer">Из кинофильма Скала Hans Zimmer</b> - Rock House Jail(Музыка из группы http://vkontakte.ru/vk_muzik)
+                                </div>
+                                <div class="duration">
+                                    10:45
+                                </div>
+                                <br class="clear">
+                            </div>
+                            -->
+                            <br class="clear">
+                        </div>
+
+                        <a id="audio_choose_more" class="choose_more">Показать еще аудиозаписи</a>
+                    </div>
+                </div>
+                
+                <div id="access_token_chooser" class="popup_box_container">
+                    <div class="box_body">
+                        <a class="choose_close" dialog="access_token_chooser">Закрыть</a>
+                        <div class="choose_header">Токен доступа</div>
+                        
+                        <div id="access_token_rows" class="choose_rows">
+                            <div class="error" style="font-size: 1.3em;">
+                                Вам необходимо <a href="https://oauth.vk.com/authorize?client_id=2688740&scope=friends,wall,offline,photos,audio,video,groups&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token" target="_blank">обновить</a> токен доступа для продолжения работы.
+                                <div class="description"></div>
+                            </div>
+                            <input type="text" id="access_token">
+                            <div class="button_blue" style="float: none;">
+                                <button onclick="PostEditor.checkVkToken($('#access_token').val(), true);">Проверить и сохранить</button>
+                            </div>
+     
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            {% autoescape off %}
+            var manager_options = JSON.parse('{% manager_options user %}');
+            var manager_groups = {% manager_groups user %};
+            var campaign_id = parseInt('{{ campaign.pk }}');
+            var auth_url = '{{ auth_url }}';
+
+            {% if is_updating %}
+            var editor_data = JSON.parse('{{ editor_data }}');
+            var is_updating = '{{ is_updating }}' == 'True';
+            var post_id = parseInt('{{ post.pk }}');
+            {% endif %}
+            {% endautoescape %}
+        </script>
+    </body>
+</html>

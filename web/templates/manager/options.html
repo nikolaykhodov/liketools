@@ -1,0 +1,41 @@
+﻿{% extends 'base.html' %}
+{% load main_extras %}
+
+{% block css_head %}
+{% endblock %}
+
+{% block js_head %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/manager_options.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<style type="text/css">
+    #optionsSaveFail, #optionsSaveSuccess {
+        display: none;
+    }
+</style>
+<div id='optionsSaveSuccess' class="alert alert-success">
+    Ваши настройки успешно сохранены.
+</div>
+
+<div id='optionsSaveFail' class="alert alert-error">
+    Что-то пошло не так, а что? Да фиг его знает. Нам пофиг.
+</div>
+
+<form onsubmit="return false;">
+    <label for="antigate_key">Ключ Антигейта:</label>
+    <input id="antigate_key" type="text" placeholder="Ключ доступа от Антигейта" value="{{ antigate_key }}">
+
+    <label for="posting_delay">Интервал между двумя постингами:</label>
+    <input id="posting_delay" type="text" placeholder="В секундах" value="{{ posting_delay }}">
+
+    <label for="captcha_attempts">Количество попыток распознавания:</label>
+    <input id="captcha_attempts" type="text" placeholder="Сколько раз" value="{{ captcha_attempts }}">
+
+    <label for="captcha_attempts_delay">Задержка между двумя запросами:</label>
+    <input id="captcha_attempts_delay" type="text" placeholder="В секундах" value="{{ captcha_attempts_delay }}">
+
+    <input type="submit" value="Сохранить" onclick="Options.save();"/>
+</form>
+{% endblock %}

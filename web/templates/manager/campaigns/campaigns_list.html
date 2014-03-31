@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load main_extras %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/manager_campaigns.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info">
+        <p>Для редактирования компании сделайте двойной щелчок по строке в таблице.</p>
+    </div>
+
+    <div id="campaigns" class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input type="checkbox" class="all_cb" value="" id="select_campaigns" onclick="CampaignManager.toggleChecked();"></th>
+                    <th>Название</th>
+                    <th>К размещению</th>
+                    <th>Размещено</th>
+                </tr>
+            </thead>
+
+            {% for campaign in campaigns %}
+            <tr campaign_id="{{ campaign.pk }}">
+                <td><input campaign_id="{{ campaign.pk }}" type="checkbox" value="" class="campaign_select"></td>
+                <td><a href="{% url manager_posts_list campaign.pk %}">{{ campaign.name }}</td>
+                <td>{{ campaign.to_be_posted }}</td>
+                <td>{{ campaign.posted }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="javascript:;" onclick="CampaignManager.showAddDialog();"><i class="icon-plus"></i></a>
+        <a class="btn" href="javascript:;" onclick="CampaignManager.showRemoveDialog();"><i class="icon-remove"></i></a>
+    </div>
+
+    <!-- UPDATE CAMPAIGN -->
+    <div id="updateCampaignModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="updateCampaignLabel">Редактирование кампании</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div id="updateCampaignError" class="alert alert-error">
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="updateCampaignName">Название</label>
+                    <div class="controls">
+                        <input type="text" value="" id="updateCampaignName" placeholder="Название">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="CampaignManager.update($('#updateCampaignName').val())">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ADD CAMPAIGN -->
+    <div id="addCampaignModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="addCampaignLabel">Добавление кампании</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div id="addCampaignError" class="alert alert-error">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="addCampaignName">Название</label>
+                    <div class="controls">
+                        <input type="text" value="" id="addCampaignName" placeholder="Название">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="CampaignManager.add($('#addCampaignName').val());">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- REMOVE CONFIRMATION DIALOG -->
+    <div id="removeCampaignsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeCampaignsLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="removeCampaignsLabel">Удаление</h3>
+        </div>
+        <div class="modal-body">
+            <div id="removeCampaignsError" class="alert alert-error">
+
+            </div>
+            <div class="alert alert-error">
+                <b>Внимание!</b> Данное действие приведет к удалению всех постов в компании!
+            </div>
+            <label class="control-label">Вы действительно хотите удалить выбранный кампанию(-и)?</label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="CampaignManager.remove();">Удалить</button>
+        </div>
+    </div>
+
+    
+{% endblock %}

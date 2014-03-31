@@ -1,0 +1,23 @@
+.post-iframe {
+    border: none;
+    width: 700px;
+    height: 700px;
+}
+
+.post-dialog {
+    width: auto;
+    max-height: none;
+    overflow-x: hidden;
+}
+
+.post-dialog .modal-body {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+.post-dialog.fade.in {
+    top: 40%;
+}
+
+.result {
+    display: none;
+}

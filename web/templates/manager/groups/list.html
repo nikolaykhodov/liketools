@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block js_head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/manager_groups.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info">
+        На данной странице Вы можете добавить группы или импортировать те, где вы администратор. Данный список будет использоваться при выборе групп для размещения поста.
+    </div>
+
+    <div id="groups" class="pull-left span10">
+        <table class="table table-hover table-bordered table-condense">
+            <thead>
+                <tr>
+                    <th class="td_cb"><input id="select_groups" type="checkbox" class="all_cb" value="" onclick="GroupManager.toggleChecked();"></th>
+                    <th>Группа</th>
+                </tr>
+            </thead>
+            {% for group in groups %}
+            <tr>
+                <td><input gid="{{ group.gid }}" type="checkbox" class="group_select"></td>
+                <td>{{ group.name }} (<a href="http://vk.com/club{{ group.gid }}" target="_blank">http://vk.com/{{ group.alias }}</a>)</td>
+            </tr>
+            {% endfor %} 
+        </table>
+    </div>
+    <div class="btn-group btn-group-vertical span1">
+        <a class="btn" href="#" onclick="GroupManager.showAddDialog();"><i class="icon-plus"></i></a>
+        <a class="btn" href="#" onclick="GroupManager.showRemoveDialog();"><i class="icon-remove"></i></a>
+        <a class="btn" href="#" onclick="GroupManager.showImportDialog();"><i class="icon-download"></i></a>
+    </div>
+
+    <!-- EDIT GROUP DIALOG
+    <div id="editGroupModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editGroupLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="editGroupLabel">Редактирование группы</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" for="inputGroupNumber">Номер группы</label>
+                    <div class="controls">
+                        <input type="text" value="" id="inputGroupNumber" placeholder="Номер группы" readonly>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputGroupName">Название группы</label>
+                    <div class="controls">
+                        <input type="text" value="" id="inputGroupName" placeholder="Название группы" readonly>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputGroupLink">Ссылка</label>
+                    <div class="controls">
+                        <input type="text" id="inputGroupLink" value="http://vk.com" placeholder="Ссылка">
+                        <span class="badge"><abbr title="Проверяется существование группы" class="initialism">?</abbr></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary">Сохранить</button>
+        </div>
+    </div>
+
+    -->
+
+    <!-- ADD GROUP DIALOG -->
+    <div id="addGroupModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addGroupLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="addGroupLabel">Добавление группы</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div id="addGroupError" class="alert alert-error">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="addInputGroupLink">Ссылка</label>
+                    <div class="controls">
+                        <input type="text" id="addInputGroupLink" value="http://vk.com" placeholder="Ссылка">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="GroupManager.add($('#addInputGroupLink').val());">Добавить</button>
+        </div>
+    </div>
+    
+    <!-- REMOVE CONFIRMATION DIALOG -->
+    <div id="removeGroupsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeGroupsLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="removeGroupsLabel">Удаление</h3>
+        </div>
+        <div class="modal-body">
+            <div id="removeGroupsError" class="alert alert-error">
+
+            </div>
+            <label class="control-label">Вы действительно хотите удалить выбранные группу(-ы)?</label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="GroupManager.remove();">Удалить</button>
+        </div>
+    </div>
+
+    <!-- IMPORT GROUPS DIALOG -->
+    <div id="importGroupsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="importGroupsLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="importGroupsLabel">Импорт групп</h3>
+        </div>
+        <div class="modal-body">
+            <label class="control-label">Вы действительно хотите импортировать группы, где вы администратор (групп: <span id="importGroupsCounter"><img src="{{ STATIC_URL }}img/ajax-loader.gif"><span class="label"></span></span>)?</label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary" onclick="GroupManager.import();">Импортировать</button>
+        </div>
+    </div>
+{% endblock %}
